@@ -30,7 +30,7 @@ class SeriousTemplateProcessor extends TemplateProcessor
                 if (class_exists($baseClassName)) { //Проверяем есть ли Base класс
                     $classArray = explode('.', $templateAlias);
                     $classArray = array_map(function ($item) {
-                        return ucfirst(trim($item));
+                        return $this->setPsrClassNames($item);
                     }, $classArray);
                     $classViewPart = implode('.', $classArray);
                     $className = str_replace('.', '\\', $classViewPart);
@@ -57,4 +57,22 @@ class SeriousTemplateProcessor extends TemplateProcessor
         }
         return $template;
     }
+
+    /**
+     * @param string $templateAlias
+     * @return string
+     */
+    private function setPsrClassNames(string $templateAlias):string
+    {
+        $explodedTplName = explode('_', $templateAlias);
+        $explodedTplName = array_map(
+            function ($item) {
+                return ucfirst(trim($item));
+            },
+            $explodedTplName
+        );
+
+        return join($explodedTplName);
+    }
+
 }
